@@ -13,3 +13,5 @@
 5] Show data on tableview in sorted by type 
 
 6] UI Navigation list to detail page one user tap on item
+
+7] Universal Support
