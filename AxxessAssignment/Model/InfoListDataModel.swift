@@ -7,18 +7,22 @@
 //
 
 import Foundation
-
+import RealmSwift
 // MARK: - InfoListDataModel
-struct InfoListDataModel: Codable {
-    let id: String
-    let type: TypeEnum
-    let date: String?
-    let data: String?
+class InfoListDataModel: Object, Codable {
+    @objc dynamic var id: String = ""
+    @objc dynamic var type: String = ""
+    @objc dynamic var date: String?
+    @objc dynamic var data: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case type
+        case date
+        case data
+    }
+    
 }
 
-enum TypeEnum: String, Codable {
-    case image = "image"
-    case other = "other"
-    case text = "text"
-}
+
 

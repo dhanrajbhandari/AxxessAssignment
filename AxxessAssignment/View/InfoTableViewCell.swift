@@ -39,7 +39,7 @@ class InfoTableViewCell: UITableViewCell {
     //MARK: - Private Method
 
     private func configureView(){
-        
+        self.selectionStyle = .none
         self.addSubview(infoView)
        infoView.snp.makeConstraints { (make) in
            make.edges.equalToSuperview()

@@ -83,7 +83,7 @@ class InfoUIView: UIView {
     func updateView(infoData: InfoListDataModel)  {
         
         self.idLabel.text = "ID: \(infoData.id)"
-        self.typeLabel.text = "Type: \(infoData.type.rawValue)"
+        self.typeLabel.text = "Type: \(infoData.type)"
         self.dateLabel.text = "Date: \(infoData.date ?? "")"
         self.dataLabel.text = "Info: \(infoData.data ?? "")"
         

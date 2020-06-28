@@ -67,7 +67,17 @@ class ListViewController: UIViewController {
     //MARK: - Private method
     private func loadInfloList(){
         
+        if !self.infoList.isEmpty { return} //Avoid every time load from DB
+        
         self.activityIndicator.startAnimating()
+
+        //Check if Data available in Db or not
+        if let list =  RealmDBManager.shared.getInfoList() {
+            self.infoList = list
+            self.activityIndicator.stopAnimating()
+
+            return
+        }
         
         NetworkManager.shared.get(urlString: APIURL.getInfoList) { [weak self] result in
             
@@ -78,23 +88,28 @@ class ListViewController: UIViewController {
             switch result {
                 
             case .failure(let err):
-                self?.showAlert(title: "Warning", message: err.localizedDescription)
+                DispatchQueue.main.async {
+                    self?.showAlert(title: "Warning", message: err.localizedDescription)
+                }
             case .success(let data):
                 let jsondecoder = JSONDecoder()
                 do {
-                     var list = try jsondecoder.decode([InfoListDataModel].self, from: data)
+                    var list = try jsondecoder.decode([InfoListDataModel].self, from: data)
                     
-                   list = list.sorted { (data1, data2) -> Bool in
-                        data1.type.rawValue < data2.type.rawValue
+                    list = list.sorted { (data1, data2) -> Bool in
+                        data1.type < data2.type
                     }
                     self?.infoList = list
+                    
                     DispatchQueue.main.async {
+                        RealmDBManager.shared.save(infoList: list)
                         self?.listTableView.reloadData()
                     }
                     
                 }catch {
-                    self?.showAlert(title: "Warning", message: "Error in data parsing")
-
+                    DispatchQueue.main.async {
+                        self?.showAlert(title: "Warning", message: "Error in data parsing")
+                    }
                 }
                 
             }
@@ -142,3 +157,6 @@ extension ListViewController: UITableViewDelegate{
     }
     
 }
+
+
+
